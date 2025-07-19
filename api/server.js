@@ -8,7 +8,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: process.env.FRONTEND_URL || ['http://localhost:5173', 'https://realtimecursor-frontend.onrender.com'],
+    origin: process.env.FRONTEND_URL || ['http://localhost:5173', 'https://*.onrender.com'],
     methods: ['GET', 'POST'],
     credentials: true
   }
@@ -18,7 +18,7 @@ const PORT = process.env.PORT || 3000;
 const authService = new AuthService();
 
 app.use(cors({
-  origin: process.env.FRONTEND_URL || ['http://localhost:5173', 'https://realtimecursor-frontend.onrender.com'],
+  origin: process.env.FRONTEND_URL || ['http://localhost:5173', 'https://*.onrender.com'],
   credentials: true
 }));
 app.use(express.json());
