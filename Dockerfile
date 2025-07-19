@@ -1,5 +1,5 @@
 # Use Node.js LTS
-FROM node:18-alpine as base
+FROM node:18 as base
 
 # Create app directory
 WORKDIR /app
@@ -8,22 +8,16 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install --no-optional
+RUN npm install
 
 # Copy app source
 COPY . .
 
 # Build frontend
-FROM base as frontend-builder
 WORKDIR /app/realtime
-COPY realtime/package*.json ./
-RUN npm install --no-optional
-COPY realtime/ ./
+RUN npm install
 RUN npm run build
-
-# Final image
-FROM base
-COPY --from=frontend-builder /app/realtime/dist /app/public
+WORKDIR /app
 
 # Set environment variables
 ENV NODE_ENV=production
@@ -31,6 +25,10 @@ ENV PORT=3000
 
 # Expose port
 EXPOSE 3000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:3000/health || exit 1
 
 # Start the server
 CMD ["node", "api/server.js"]

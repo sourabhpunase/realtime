@@ -28,6 +28,11 @@ app.get('/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
+// Root endpoint for Docker health checks
+app.get('/', (req, res) => {
+  res.json({ status: 'OK', message: 'RealtimeCursor API is running' });
+});
+
 // Test comments endpoint
 app.get('/test-comments', (req, res) => {
   res.json({ 
