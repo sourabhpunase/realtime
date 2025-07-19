@@ -1,0 +1,34 @@
+{
+  "name": "realtimecursor-sdk",
+  "version": "1.0.0",
+  "description": "SDK for integrating with RealtimeCursor collaboration platform",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "node build.js",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "collaboration",
+    "real-time",
+    "cursor-tracking",
+    "approval-workflow",
+    "saas"
+  ],
+  "author": "Sourabh Punase",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.10.0",
+    "socket.io-client": "^4.8.1"
+  },
+  "devDependencies": {
+    "@types/node": "^18.16.0",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "typescript": "^5.0.4"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
+  }
+}

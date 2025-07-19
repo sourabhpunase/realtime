@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RealtimeCursor Documentation</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    .gradient-bg {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    }
+    pre {
+      overflow-x: auto;
+    }
+    .sidebar {
+      position: sticky;
+      top: 2rem;
+    }
+  </style>
+</head>
+<body class="font-sans antialiased text-gray-900 bg-gray-50">
+  <!-- Header -->
+  <header class="gradient-bg text-white">
+    <div class="container mx-auto px-6 py-4">
+      <div class="flex justify-between items-center">
+        <div class="flex items-center">
+          <a href="/" class="text-2xl font-bold">RealtimeCursor</a>
+        </div>
+        <nav class="hidden md:flex space-x-10">
+          <a href="/#features" class="hover:text-indigo-200 transition">Features</a>
+          <a href="/#pricing" class="hover:text-indigo-200 transition">Pricing</a>
+          <a href="/docs.html" class="hover:text-indigo-200 transition">Documentation</a>
+          <a href="/#contact" class="hover:text-indigo-200 transition">Contact</a>
+        </nav>
+        <div class="hidden md:flex items-center space-x-4">
+          <a href="/login" class="px-4 py-2 rounded hover:bg-white hover:bg-opacity-10 transition">Login</a>
+          <a href="/signup" class="px-4 py-2 bg-white text-indigo-600 rounded-lg font-medium hover:bg-opacity-90 transition">Sign Up</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Documentation Content -->
+  <div class="container mx-auto px-6 py-12">
+    <div class="flex flex-col lg:flex-row">
+      <!-- Sidebar -->
+      <div class="lg:w-1/4 mb-8 lg:mb-0">
+        <div class="sidebar bg-white p-6 rounded-lg shadow-md">
+          <h3 class="text-lg font-bold mb-4">Documentation</h3>
+          <ul class="space-y-2">
+            <li><a href="#getting-started" class="text-indigo-600 hover:text-indigo-800">Getting Started</a></li>
+            <li><a href="#installation" class="text-indigo-600 hover:text-indigo-800">Installation</a></li>
+            <li><a href="#authentication" class="text-indigo-600 hover:text-indigo-800">Authentication</a></li>
+            <li><a href="#projects" class="text-indigo-600 hover:text-indigo-800">Working with Projects</a></li>
+            <li><a href="#cursors" class="text-indigo-600 hover:text-indigo-800">Cursor Tracking</a></li>
+            <li><a href="#comments" class="text-indigo-600 hover:text-indigo-800">Comments System</a></li>
+            <li><a href="#history" class="text-indigo-600 hover:text-indigo-800">Version History</a></li>
+            <li><a href="#approval" class="text-indigo-600 hover:text-indigo-800">Approval Workflow</a></li>
+            <li><a href="#self-hosting" class="text-indigo-600 hover:text-indigo-800">Self-Hosting</a></li>
+            <li><a href="#api-reference" class="text-indigo-600 hover:text-indigo-800">API Reference</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="lg:w-3/4 lg:pl-8">
+        <h1 class="text-4xl font-bold mb-8">RealtimeCursor Documentation</h1>
+        
+        <section id="getting-started" class="mb-12">
+          <h2 class="text-2xl font-bold mb-4">Getting Started</h2>
+          <p class="mb-4">RealtimeCursor is a powerful real-time collaboration platform that allows you to add live cursor tracking, approval workflows, and GitHub-style history to your applications.</p>
+          <p class="mb-4">This documentation will guide you through the process of integrating RealtimeCursor into your React applications.</p>
+        </section>
+
+        <section id="installation" class="mb-12">
+          <h2 class="text-2xl font-bold mb-4">Installation</h2>
+          <p class="mb-4">Install the RealtimeCursor SDK using npm or yarn:</p>
+          <pre class="bg-gray-100 p-4 rounded-lg mb-4">
+npm install realtimecursor-sdk
+# or
+yarn add realtimecursor-sdk</pre>
+        </section>
+
+        <section id="authentication" class="mb-12">
+          <h2 class="text-2xl font-bold mb-4">Authentication</h2>
+          <p class="mb-4">To use RealtimeCursor, you need to authenticate your users. The SDK provides a simple hook for authentication:</p>
+          <pre class="bg-gray-100 p-4 rounded-lg mb-4">
+import React from 'react';
+import { useRealtimeCursor } from 'realtimecursor-sdk';
+
+function App() {
+  const { 
+    client, 
+    user, 
+    login, 
+    logout, 
+    isAuthenticated, 
+    loading 
+  } = useRealtimeCursor({
+    apiUrl: 'https://your-realtimecursor-api.com',
+    socketUrl: 'https://your-realtimecursor-api.com'
+  });
+
+  const handleLogin = async () => {
+    try {
+      await login('user@example.com', 'password');
+    } catch (error) {
+      console.error('Login failed:', error);
+    }
+  };
+
+  return (
+    <div>
+      {!isAuthenticated ? (
+        <button onClick={handleLogin}>Login</button>
+      ) : (
+        <div>
+          <p>Welcome, {user?.fullName}</p>
+          <button onClick={logout}>Logout</button>
+        </div>
+      )}
+    </div>
+  );
+}</pre>
+        </section>
+
+        <section id="projects" class="mb-12">
+          <h2 class="text-2xl font-bold mb-4">Working with Projects</h2>
+          <p class="mb-4">Once authenticated, you can work with projects using the <code>useProject</code> hook:</p>
+          <pre class="bg-gray-100 p-4 rounded-lg mb-4">
+import React, { useRef } from 'react';
+import { useProject } from 'realtimecursor-sdk';
+
+function ProjectEditor({ client, projectId }) {
+  const editorRef = useRef(null);
+  const { 
+    project, 
+    content, 
+    comments, 
+    stagedChanges, 
+    history, 
+    collaborators, 
+    cursors, 
+    updateContent, 
+    addComment,
+    reviewChange
+  } = useProject(client, projectId);
+
+  const handleContentChange = (newContent) => {
+    updateContent(newContent);
+  };
+
+  return (
+    <div>
+      <h1>{project?.name}</h1>
+      <textarea
+        ref={editorRef}
+        value={content}
+        onChange={(e) => handleContentChange(e.target.value)}
+      />
+    </div>
+  );
+}</pre>
+        </section>
+
+        <section id="cursors" class="mb-12">
+          <h2 class="text-2xl font-bold mb-4">Cursor Tracking</h2>
+          <p class="mb-4">To enable cursor tracking, use the <code>useCursorTracking</code> hook and <code>CursorOverlay</code> component:</p>
+          <pre class="bg-gray-100 p-4 rounded-lg mb-4">
+import { useCursorTracking, CursorOverlay } from 'realtimecursor-sdk';
+
+function ProjectEditor({ client, projectId }) {
+  // ... other code from previous example
+
+  // Set up cursor tracking
+  useCursorTracking(editorRef, client);
+
+  return (
+    <div style={{ position: 'relative' }}>
+      <textarea
+        ref={editorRef}
+        value={content}
+        onChange={(e) => handleContentChange(e.target.value)}
+      />
+      
+      <CursorOverlay
+        cursors={cursors}
+        content={content}
+        editorRef={editorRef}
+      />
+    </div>
+  );
+}</pre>
+        </section>
+
+        <section id="comments" class="mb-12">
+          <h2 class="text-2xl font-bold mb-4">Comments System</h2>
+          <p class="mb-4">You can add comments to specific text selections:</p>
+          <pre class="bg-gray-100 p-4 rounded-lg mb-4">
+function addComment() {
+  const selectedText = getSelectedText();
+  const commentText = "This is a comment";
+  
+  client.addComment(projectId, {
+    text: commentText,
+    selectedText: selectedText,
+    startPosition: selectionStart,
+    endPosition: selectionEnd
+  });
+}</pre>
+        </section>
+
+        <section id="history" class="mb-12">
+          <h2 class="text-2xl font-bold mb-4">Version History</h2>
+          <p class="mb-4">Display project history with the <code>HistoryList</code> component:</p>
+          <pre class="bg-gray-100 p-4 rounded-lg mb-4">
+import { HistoryList } from 'realtimecursor-sdk';
+
+function ProjectHistory({ history }) {
+  return (
+    <div>
+      <h3>History</h3>
+      <HistoryList history={history} />
+    </div>
+  );
+}</pre>
+        </section>
+
+        <section id="approval" class="mb-12">
+          <h2 class="text-2xl font-bold mb-4">Approval Workflow</h2>
+          <p class="mb-4">For admin users, you can review and approve/reject changes:</p>
+          <pre class="bg-gray-100 p-4 rounded-lg mb-4">
+import { ReviewChangesList } from 'realtimecursor-sdk';
+
+function ReviewChanges({ stagedChanges, reviewChange }) {
+  return (
+    <div>
+      <h3>Pending Changes ({stagedChanges.length})</h3>
+      <ReviewChangesList
+        changes={stagedChanges}
+        onApprove={(changeId, feedback) => reviewChange(changeId, true, feedback)}
+        onReject={(changeId, feedback) => reviewChange(changeId, false, feedback)}
+      />
+    </div>
+  );
+}</pre>
+        </section>
+
+        <section id="self-hosting" class="mb-12">
+          <h2 class="text-2xl font-bold mb-4">Self-Hosting</h2>
+          <p class="mb-4">You can self-host RealtimeCursor by following these steps:</p>
+          <ol class="list-decimal pl-6 mb-4 space-y-2">
+            <li>Clone the repository: <code>git clone https://github.com/yourusername/realtimecursor.git</code></li>
+            <li>Install dependencies: <code>npm install</code></li>
+            <li>Start the development server: <code>./start-dev.sh</code></li>
+          </ol>
+          <p class="mb-4">For production deployment, see the <a href="/DEPLOYMENT.md" class="text-indigo-600 hover:text-indigo-800">Deployment Guide</a>.</p>
+        </section>
+
+        <section id="api-reference" class="mb-12">
+          <h2 class="text-2xl font-bold mb-4">API Reference</h2>
+          
+          <h3 class="text-xl font-bold mt-6 mb-3">Core SDK</h3>
+          <ul class="list-disc pl-6 mb-4 space-y-2">
+            <li><code>RealtimeCursorSDK</code>: Main SDK class</li>
+            <li><code>createRealtimeCursorClient(config)</code>: Helper to create SDK instance</li>
+          </ul>
+          
+          <h3 class="text-xl font-bold mt-6 mb-3">React Hooks</h3>
+          <ul class="list-disc pl-6 mb-4 space-y-2">
+            <li><code>useRealtimeCursor(config)</code>: Main hook for authentication</li>
+            <li><code>useProject(client, projectId)</code>: Hook for project operations</li>
+            <li><code>useCursorTracking(editorRef, client)</code>: Hook for cursor tracking</li>
+          </ul>
+          
+          <h3 class="text-xl font-bold mt-6 mb-3">React Components</h3>
+          <ul class="list-disc pl-6 mb-4 space-y-2">
+            <li><code>CollaborativeEditor</code>: Textarea with collaboration features</li>
+            <li><code>CursorOverlay</code>: Displays other users' cursors</li>
+            <li><code>CollaboratorsList</code>: Shows active collaborators</li>
+            <li><code>HistoryList</code>: Displays project history</li>
+            <li><code>ReviewChangesList</code>: UI for reviewing changes</li>
+          </ul>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white py-12">
+    <div class="container mx-auto px-6">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+          <h3 class="text-xl font-bold mb-4">RealtimeCursor</h3>
+          <p class="text-gray-400">Real-time collaboration platform for modern applications.</p>
+        </div>
+        <div>
+          <h4 class="text-lg font-semibold mb-4">Product</h4>
+          <ul class="space-y-2">
+            <li><a href="/#features" class="text-gray-400 hover:text-white transition">Features</a></li>
+            <li><a href="/#pricing" class="text-gray-400 hover:text-white transition">Pricing</a></li>
+            <li><a href="/docs.html" class="text-gray-400 hover:text-white transition">Documentation</a></li>
+            <li><a href="/changelog" class="text-gray-400 hover:text-white transition">Changelog</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-lg font-semibold mb-4">Company</h4>
+          <ul class="space-y-2">
+            <li><a href="/about" class="text-gray-400 hover:text-white transition">About Us</a></li>
+            <li><a href="/blog" class="text-gray-400 hover:text-white transition">Blog</a></li>
+            <li><a href="/careers" class="text-gray-400 hover:text-white transition">Careers</a></li>
+            <li><a href="/contact" class="text-gray-400 hover:text-white transition">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-lg font-semibold mb-4">Legal</h4>
+          <ul class="space-y-2">
+            <li><a href="/privacy" class="text-gray-400 hover:text-white transition">Privacy Policy</a></li>
+            <li><a href="/terms" class="text-gray-400 hover:text-white transition">Terms of Service</a></li>
+            <li><a href="/security" class="text-gray-400 hover:text-white transition">Security</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+        <p class="text-gray-400">&copy; 2023 RealtimeCursor. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

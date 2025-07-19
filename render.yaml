@@ -1,0 +1,38 @@
+services:
+  # Backend API Service
+  - type: web
+    name: realtimecursor-api
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 3000
+      - key: NODE_ENV
+        value: production
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_KEY
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+    healthCheckPath: /health
+    autoDeploy: true
+
+  # Frontend Service
+  - type: web
+    name: realtimecursor-frontend
+    env: static
+    buildCommand: cd realtime && npm install && npm run build
+    staticPublishPath: ./realtime/dist
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          name: realtimecursor-api
+          type: web
+          property: url
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    autoDeploy: true

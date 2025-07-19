@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Comments</title>
+</head>
+<body>
+    <h1>Test Comments API</h1>
+    <button onclick="testComments()">Test Add Comment</button>
+    <div id="result"></div>
+
+    <script>
+        async function testComments() {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                document.getElementById('result').innerHTML = 'No auth token found. Please login first.';
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:3000/projects/ba666671-3c1e-434f-afc7-753a592a39b4/comments', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        text: 'Test comment',
+                        selectedText: 'selected text',
+                        startPosition: 0,
+                        endPosition: 13
+                    })
+                });
+
+                const result = await response.json();
+                document.getElementById('result').innerHTML = `
+                    <h3>Response:</h3>
+                    <pre>${JSON.stringify(result, null, 2)}</pre>
+                    <p>Status: ${response.status}</p>
+                `;
+            } catch (error) {
+                document.getElementById('result').innerHTML = `Error: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>

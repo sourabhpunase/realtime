@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .info { background: #e3f2fd; padding: 15px; border-radius: 8px; margin: 10px 0; }
+        .success { background: #e8f5e8; padding: 15px; border-radius: 8px; margin: 10px 0; }
+        .error { background: #ffebee; padding: 15px; border-radius: 8px; margin: 10px 0; }
+        .step { margin: 20px 0; padding: 15px; border-left: 4px solid #2196f3; }
+        code { background: #f5f5f5; padding: 2px 6px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <h1>🚀 Admin Panel Setup & Test Guide</h1>
+    
+    <div class="info">
+        <h3>📋 Quick Setup Checklist</h3>
+        <p>Follow these steps to test your admin functionality:</p>
+    </div>
+
+    <div class="step">
+        <h3>Step 1: Start Backend Server</h3>
+        <p>Open terminal and run:</p>
+        <code>cd api && npm start</code>
+        <p>✅ Server should start on <strong>http://localhost:3000</strong></p>
+    </div>
+
+    <div class="step">
+        <h3>Step 2: Start Frontend</h3>
+        <p>Open another terminal and run:</p>
+        <code>cd realtime && npm run dev</code>
+        <p>✅ Frontend should start on <strong>http://localhost:5173</strong></p>
+    </div>
+
+    <div class="step">
+        <h3>Step 3: Login as Admin</h3>
+        <p>Use these credentials:</p>
+        <div class="success">
+            <strong>Email:</strong> admin@example.com<br>
+            <strong>Password:</strong> Admin123!
+        </div>
+    </div>
+
+    <div class="step">
+        <h3>Step 4: Access Admin Panel</h3>
+        <p>After login:</p>
+        <ul>
+            <li>Click on your profile (top right)</li>
+            <li>Look for the <strong>👑 Admin Panel</strong> tab</li>
+            <li>You should see all user information displayed</li>
+        </ul>
+    </div>
+
+    <div class="step">
+        <h3>Step 5: Test Admin Features</h3>
+        <p>You should be able to:</p>
+        <ul>
+            <li>✅ View all users with complete information</li>
+            <li>✅ See user avatars with initials</li>
+            <li>✅ Filter users by role (Admin/User)</li>
+            <li>✅ Search users by name or email</li>
+            <li>✅ Create new users</li>
+            <li>✅ Edit existing users</li>
+            <li>✅ Change user roles</li>
+            <li>✅ Delete users (except yourself)</li>
+            <li>✅ Bulk select and delete multiple users</li>
+        </ul>
+    </div>
+
+    <div class="info">
+        <h3>🎨 New Styling Features</h3>
+        <ul>
+            <li>Modern gradient backgrounds</li>
+            <li>Smooth animations and transitions</li>
+            <li>Professional table design</li>
+            <li>User avatars with initials</li>
+            <li>Role badges with icons</li>
+            <li>Responsive design for all screen sizes</li>
+        </ul>
+    </div>
+
+    <div class="step">
+        <h3>🔍 Admin User Identification</h3>
+        <p>Admin users are identified by:</p>
+        <ul>
+            <li><strong>👑 Crown icon</strong> next to their name</li>
+            <li><strong>Yellow badge</strong> showing "👑 Admin"</li>
+            <li><strong>Access to Admin Panel</strong> tab</li>
+            <li><strong>"You" indicator</strong> for current user</li>
+        </ul>
+    </div>
+
+    <div class="success">
+        <h3>✅ Success Indicators</h3>
+        <p>If everything works correctly, you should see:</p>
+        <ul>
+            <li>Beautiful, modern interface with gradients</li>
+            <li>All user information displayed in the table</li>
+            <li>Statistics cards showing user counts</li>
+            <li>Smooth animations when interacting</li>
+            <li>Professional styling throughout</li>
+        </ul>
+    </div>
+
+    <div class="error">
+        <h3>🚨 Troubleshooting</h3>
+        <p>If you encounter issues:</p>
+        <ul>
+            <li>Make sure both servers are running</li>
+            <li>Check browser console for errors</li>
+            <li>Verify you're using the correct admin credentials</li>
+            <li>Try refreshing the page</li>
+            <li>Check if port 3000 and 5173 are available</li>
+        </ul>
+    </div>
+
+    <script>
+        // Auto-refresh every 30 seconds to check if servers are running
+        setTimeout(() => {
+            fetch('http://localhost:3000/health')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'OK') {
+                        document.body.insertAdjacentHTML('afterbegin', 
+                            '<div class="success">✅ Backend server is running!</div>'
+                        );
+                    }
+                })
+                .catch(() => {
+                    document.body.insertAdjacentHTML('afterbegin', 
+                        '<div class="error">❌ Backend server is not running. Please start it with: cd api && npm start</div>'
+                    );
+                });
+        }, 1000);
+    </script>
+</body>
+</html>

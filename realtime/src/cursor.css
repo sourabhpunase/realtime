@@ -1,0 +1,196 @@
+/* Cursor animations and styles */
+.cursor-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.collaborative-cursor {
+  position: absolute;
+  transition: all 75ms ease-out;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 10000;
+}
+
+.cursor-click-effect {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  animation: cursor-click-pulse 0.3s ease-out;
+  pointer-events: none;
+}
+
+@keyframes cursor-click-pulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+.cursor-name-label {
+  position: absolute;
+  top: 24px;
+  left: 8px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  color: white;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  pointer-events: none;
+}
+
+.connection-indicator {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 9998;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(34, 197, 94, 0.1);
+  color: rgb(22, 163, 74);
+  padding: 8px 12px;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 500;
+  backdrop-filter: blur(8px);
+}
+
+.connection-dot {
+  width: 8px;
+  height: 8px;
+  background: rgb(34, 197, 94);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Smooth cursor movement */
+.cursor-smooth {
+  transition: transform 75ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Hover effects */
+.collaborative-cursor:hover .cursor-name-label {
+  transform: scale(1.05);
+}
+
+/* Enhanced mobile responsiveness */
+@media (max-width: 768px) {
+  .cursor-name-label {
+    font-size: 11px;
+    padding: 4px 8px;
+    border-radius: 8px;
+  }
+  
+  .connection-indicator {
+    font-size: 12px;
+    padding: 8px 12px;
+    gap: 8px;
+  }
+  
+  .collaborative-cursor svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cursor-name-label {
+    font-size: 10px;
+    padding: 3px 6px;
+  }
+  
+  .connection-indicator {
+    font-size: 11px;
+    padding: 6px 10px;
+    top: 12px;
+    right: 12px;
+  }
+}
+
+/* New animations */
+@keyframes cursor-click-burst {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes cursor-glow {
+  0% {
+    opacity: 0.2;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 0.4;
+    transform: scale(1.2);
+  }
+}
+
+/* Performance optimizations */
+.cursor-overlay * {
+  will-change: transform, opacity;
+}
+
+.collaborative-cursor {
+  contain: layout style paint;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .collaborative-cursor,
+  .cursor-name-label,
+  .connection-indicator {
+    transition: none;
+    animation: none;
+  }
+  
+  .cursor-click-effect,
+  .cursor-glow {
+    animation: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .cursor-name-label {
+    border: 2px solid currentColor;
+  }
+  
+  .collaborative-cursor svg path {
+    stroke-width: 2;
+  }
+}
