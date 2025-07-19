@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm ci
+RUN npm install --no-optional
 
 # Copy app source
 COPY . .
@@ -17,7 +17,7 @@ COPY . .
 FROM base as frontend-builder
 WORKDIR /app/realtime
 COPY realtime/package*.json ./
-RUN npm ci
+RUN npm install --no-optional
 COPY realtime/ ./
 RUN npm run build
 

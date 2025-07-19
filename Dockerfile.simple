@@ -1,0 +1,33 @@
+# Use Node.js LTS
+FROM node:18-alpine
+
+# Create app directory
+WORKDIR /app
+
+# Copy backend package files and install dependencies
+COPY package*.json ./
+RUN npm install
+
+# Copy frontend package files and install dependencies
+COPY realtime/package*.json ./realtime/
+WORKDIR /app/realtime
+RUN npm install
+WORKDIR /app
+
+# Copy all source files
+COPY . .
+
+# Build frontend
+WORKDIR /app/realtime
+RUN npm run build
+WORKDIR /app
+
+# Set environment variables
+ENV NODE_ENV=production
+ENV PORT=3000
+
+# Expose port
+EXPOSE 3000
+
+# Start the server
+CMD ["node", "api/server.js"]

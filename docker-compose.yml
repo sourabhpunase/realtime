@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  realtimecursor:
+    build:
+      context: .
+      dockerfile: Dockerfile.simple
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - JWT_SECRET=your_jwt_secret_here
+    restart: unless-stopped
