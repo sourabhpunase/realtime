@@ -42,9 +42,42 @@
       text-decoration: none;
       font-weight: 600;
       transition: background-color 0.2s;
+      margin: 0.5rem;
     }
     .button:hover {
       background-color: #3182ce;
+    }
+    .status {
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: 5px;
+    }
+    .status.online {
+      background-color: #c6f6d5;
+      color: #2f855a;
+    }
+    .status.offline {
+      background-color: #fed7d7;
+      color: #c53030;
+    }
+    .login-form {
+      margin-top: 2rem;
+      text-align: left;
+    }
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 5px;
+      font-size: 1rem;
     }
   </style>
 </head>
@@ -52,28 +85,138 @@
   <div class="container">
     <h1>RealtimeCursor</h1>
     <p>A powerful real-time collaboration platform with live cursor tracking, approval workflows, and GitHub-style history.</p>
-    <p>The backend API is running at: <span id="api-url">Loading...</span></p>
-    <a href="#" class="button" id="login-button">Access Platform</a>
+    
+    <div id="status" class="status">Checking backend status...</div>
+    
+    <div>
+      <a href="#" class="button" id="create-admin-button">Create Admin Users</a>
+      <a href="#" class="button" id="health-check-button">Check Health</a>
+    </div>
+    
+    <div class="login-form">
+      <h2>Login</h2>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" value="superadmin@example.com">
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" value="SuperAdmin123!">
+      </div>
+      <button id="login-button" class="button">Login</button>
+      <div id="login-result"></div>
+    </div>
   </div>
 
   <script>
-    // Get the API URL from environment variable
-    const apiUrl = process.env.VITE_API_URL || 'http://localhost:3000';
+    // Get the backend URL from the URL parameter or use default
+    const urlParams = new URLSearchParams(window.location.search);
+    const apiUrl = urlParams.get('api') || 'https://realtime-1.onrender.com';
     
-    document.getElementById('api-url').textContent = apiUrl;
-    document.getElementById('login-button').href = apiUrl;
+    const statusElement = document.getElementById('status');
+    const createAdminButton = document.getElementById('create-admin-button');
+    const healthCheckButton = document.getElementById('health-check-button');
+    const loginButton = document.getElementById('login-button');
+    const loginResultElement = document.getElementById('login-result');
     
-    // Check if the API is available
-    fetch(apiUrl + '/health')
-      .then(response => response.json())
-      .then(data => {
+    // Check health endpoint
+    async function checkHealth() {
+      try {
+        statusElement.textContent = "Checking backend status...";
+        statusElement.className = "status";
+        
+        const response = await fetch(`${apiUrl}/health`);
+        const data = await response.json();
+        
         if (data.status === 'OK') {
-          document.getElementById('api-url').textContent = apiUrl + ' (Online)';
+          statusElement.textContent = `Backend is online! ${apiUrl}`;
+          statusElement.className = "status online";
+        } else {
+          statusElement.textContent = `Backend returned unexpected response: ${JSON.stringify(data)}`;
+          statusElement.className = "status offline";
         }
-      })
-      .catch(error => {
-        document.getElementById('api-url').textContent = apiUrl + ' (Offline)';
-      });
+      } catch (error) {
+        statusElement.textContent = `Backend is offline or unreachable: ${error.message}`;
+        statusElement.className = "status offline";
+      }
+    }
+    
+    // Create admin users
+    async function createAdminUsers() {
+      try {
+        statusElement.textContent = "Creating admin users...";
+        statusElement.className = "status";
+        
+        const response = await fetch(`${apiUrl}/create-default-admins`, {
+          method: 'POST'
+        });
+        const data = await response.json();
+        
+        if (data.success) {
+          statusElement.textContent = `Admin users created: ${JSON.stringify(data.results)}`;
+          statusElement.className = "status online";
+        } else {
+          statusElement.textContent = `Failed to create admin users: ${data.message || JSON.stringify(data)}`;
+          statusElement.className = "status offline";
+        }
+      } catch (error) {
+        statusElement.textContent = `Error creating admin users: ${error.message}`;
+        statusElement.className = "status offline";
+      }
+    }
+    
+    // Login
+    async function login() {
+      try {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        
+        loginResultElement.textContent = "Logging in...";
+        
+        const response = await fetch(`${apiUrl}/auth/login`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ email, password })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          loginResultElement.textContent = `Login successful! Token: ${data.token.substring(0, 20)}...`;
+          localStorage.setItem('authToken', data.token);
+          localStorage.setItem('user', JSON.stringify(data.user));
+        } else {
+          loginResultElement.textContent = `Login failed: ${data.message || JSON.stringify(data)}`;
+        }
+      } catch (error) {
+        loginResultElement.textContent = `Login error: ${error.message}`;
+      }
+    }
+    
+    // Add event listeners
+    createAdminButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      createAdminUsers();
+    });
+    
+    healthCheckButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      checkHealth();
+    });
+    
+    loginButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      login();
+    });
+    
+    // Check health on page load
+    checkHealth();
+    
+    // Set button URLs
+    createAdminButton.href = `${apiUrl}/create-default-admins`;
+    healthCheckButton.href = `${apiUrl}/health`;
   </script>
 </body>
 </html>
