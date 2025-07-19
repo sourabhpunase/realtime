@@ -1095,6 +1095,15 @@ app.get('/all-users', async (req, res) => {
   }
 });
 
+// Health check for admin creation endpoint
+app.get('/create-default-admins-check', (req, res) => {
+  res.json({
+    success: true,
+    message: 'Admin creation endpoint is available',
+    endpoint: '/create-default-admins (POST)'
+  });
+});
+
 // Create default admin users in Supabase
 app.post('/create-default-admins', async (req, res) => {
   try {
@@ -1151,14 +1160,6 @@ app.use((err, req, res, next) => {
   res.status(500).json({
     success: false,
     message: 'Something went wrong!'
-  });
-});
-
-// 404 handler
-app.use((req, res) => {
-  res.status(404).json({
-    success: false,
-    message: 'Endpoint not found'
   });
 });
 
@@ -1317,6 +1318,17 @@ process.on('SIGINT', () => {
   server.close(() => {
     console.log('✅ Server closed');
     process.exit(0);
+  });
+});
+
+// 404 handler - must be the last middleware
+app.use((req, res) => {
+  console.log(`404 Not Found: ${req.method} ${req.originalUrl}`);
+  res.status(404).json({
+    success: false,
+    message: 'Endpoint not found',
+    path: req.originalUrl,
+    method: req.method
   });
 });
 
