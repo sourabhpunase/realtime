@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node api/server.js",
     "dev": "nodemon api/server.js",
-    "build": "cd realtime && npm run build",
+    "build": "./render-build.sh",
+    "build:frontend": "cd realtime && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "engines": {
