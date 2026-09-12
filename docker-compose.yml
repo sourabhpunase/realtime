@@ -1,14 +1,59 @@
-version: '3'
-
 services:
-  realtimecursor:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: realtime
+      POSTGRES_PASSWORD: realtime
+      POSTGRES_DB: realtime
+    ports:
+      - "5432:5432"
+    volumes:
+      - realtime_pg:/var/lib/postgresql/data
+      - ./migrations/001_init.sql:/docker-entrypoint-initdb.d/001_init.sql:ro
+      - ./migrations/002_milestone_d.sql:/docker-entrypoint-initdb.d/002_milestone_d.sql:ro
+      - ./migrations/003_schema_align.sql:/docker-entrypoint-initdb.d/003_schema_align.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U realtime -d realtime"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  livekit:
+    image: livekit/livekit-server:v1.8.3
+    command: --dev --bind 0.0.0.0
+    ports:
+      - "7880:7880"
+      - "7881:7881"
+      - "50100-50200:50100-50200/udp"
+    profiles: ["media"]
+
+  platform:
     build:
       context: .
-      dockerfile: Dockerfile.simple
+      dockerfile: Dockerfile.platform
+    depends_on:
+      postgres:
+        condition: service_healthy
     ports:
-      - "3000:3000"
+      - "3080:3080"
     environment:
-      - NODE_ENV=production
-      - PORT=3000
-      - JWT_SECRET=your_jwt_secret_here
-    restart: unless-stopped
+      NODE_ENV: production
+      PLATFORM_PORT: 3080
+      STORE_DRIVER: postgres
+      DATABASE_URL: postgres://realtime:realtime@postgres:5432/realtime
+      MIGRATIONS_DIR: /app/migrations
+      PLATFORM_SIGNING_SEED: ${PLATFORM_SIGNING_SEED:-change-me}
+      DEMO_PUBLIC_KEY: pk_test_sample_local_dev_only
+      DEMO_SECRET_KEY: ${DEMO_SECRET_KEY:-sk_test_sample_local_dev_only_rotate}
+      CORS_ORIGINS: http://localhost:4000
+      SEED_DEMO: "true"
+      REDIS_URL: ${REDIS_URL:-}
+    profiles: ["platform"]
+
+volumes:
+  realtime_pg:

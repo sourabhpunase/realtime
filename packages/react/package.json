@@ -1,0 +1,32 @@
+{
+  "name": "@realtime/react",
+  "version": "0.1.0",
+  "description": "React bindings for Realtime rooms, presence, and cursors",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@realtime/core": "0.1.0",
+    "@realtime/protocol": "0.1.0"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "typescript": "^5.8.2"
+  },
+  "license": "MIT"
+}

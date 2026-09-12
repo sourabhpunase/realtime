@@ -1,0 +1,35 @@
+{
+  "name": "@realtime/platform",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsx src/index.ts",
+    "start": "node dist/index.js",
+    "migrate": "tsx src/migrate.ts",
+    "test": "tsx --test test/*.test.ts",
+    "bench:latency": "tsx scripts/measure-latency.ts"
+  },
+  "dependencies": {
+    "@realtime/protocol": "0.1.0",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "jose": "^6.0.10",
+    "livekit-server-sdk": "^2.13.3",
+    "@socket.io/redis-adapter": "^8.3.0",
+    "pg": "^8.23.0",
+    "redis": "^4.7.1",
+    "socket.io": "^4.8.1",
+    "yjs": "^13.6.24"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.13.10",
+    "@types/pg": "^8.23.1",
+    "socket.io-client": "^4.8.1",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2"
+  }
+}

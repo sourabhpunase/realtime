@@ -15,8 +15,8 @@ yarn-error.log
 # Build files
 /dist
 /build
-/realtime/dist
-/sdk/dist
+packages/*/dist
+apps/*/dist
 
 # Logs
 logs
@@ -40,6 +40,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Packed SDK tarballs
+dist-packages/
+
 # Local development
 .vercel
 .netlify
@@ -52,3 +55,4 @@ yarn-error.log*
 .cache/
 .parcel-cache/
 server.log
+*.tsbuildinfo

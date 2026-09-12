@@ -1,0 +1,15 @@
+FROM node:22-alpine
+WORKDIR /app
+COPY package.json package-lock.json* ./
+COPY packages ./packages
+COPY apps/platform ./apps/platform
+COPY migrations ./migrations
+COPY tsconfig.base.json ./
+RUN npm install --workspace=@realtime/protocol --workspace=@realtime/platform --include-workspace-root=false \
+  && npm run build -w @realtime/protocol \
+  && npm run build -w @realtime/platform
+WORKDIR /app/apps/platform
+ENV PLATFORM_PORT=3080
+ENV MIGRATIONS_DIR=/app/migrations
+EXPOSE 3080
+CMD ["node", "dist/index.js"]

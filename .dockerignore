@@ -1,6 +1,8 @@
 node_modules
-npm-debug.log
 .git
 .env
-*.md
-.gitignore
+dist-packages
+apps/sample-integrator
+**/*.md
+**/*.test.ts
+**/*.test.mjs

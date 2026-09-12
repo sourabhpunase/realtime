@@ -1,0 +1,39 @@
+{
+  "name": "@realtime/media",
+  "version": "0.1.0",
+  "description": "Self-hosted LiveKit room audio for Realtime",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "import": "./dist/react.js"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "tsx --test src/session.test.ts"
+  },
+  "dependencies": {
+    "@realtime/core": "0.1.0",
+    "@realtime/protocol": "0.1.0",
+    "@realtime/react": "0.1.0",
+    "livekit-client": "^2.15.4"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.8",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2"
+  },
+  "license": "MIT"
+}
